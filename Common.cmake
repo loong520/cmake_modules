@@ -1,3 +1,33 @@
+macro(gen_link_name_for_app)
+    if (CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(LINK_NAME "${PROJECT_NAME}-d")
+    else ()
+        set(LINK_NAME "${PROJECT_NAME}")
+    endif ()
+endmacro()
+
+macro(gen_link_name_for_lib)
+    if (CMAKE_HOST_WIN32)
+        set(LINK_NAME "lib${PROJECT_NAME}-${PROJECT_VERSION}")
+    else ()
+        set(LINK_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
+    endif ()
+
+    if (CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(LINK_NAME "${LINK_NAME}-d")
+    endif ()
+
+    set(LIB_FOR_TEST ${LINK_NAME} CACHE INTERNAL "lib for test")
+endmacro()
+
+macro(gen_link_name_for_test)
+    if (CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(LINK_NAME_FOR_TEST "${PROJECT_NAME}-d")
+    else ()
+        set(LINK_NAME_FOR_TEST "${PROJECT_NAME}")
+    endif ()
+endmacro()
+
 macro(use_qt5)
     if (NOT DEFINED CMAKE_BUILD_TYPE)
         MESSAGE(FATAL_ERROR "CMAKE_BUILD_TYPE not defined! It must be defined as 'Debug' or 'Release'!")
@@ -19,7 +49,6 @@ macro(use_qt5)
         find_package(Qt5 COMPONENTS ${COMP} REQUIRED)
     endforeach ()
 endmacro()
-
 macro(link_qt5)
     foreach (COMP IN LISTS QT5_COMPONENTS)
         if (LINK_NAME)
@@ -43,14 +72,13 @@ macro(use_qt5_for_test)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTORCC ON)
 
-    set(QT5_COMPONENTS_FOR_TEST ${ARGN} CACHE INTERNAL "qt5 components for tests")
+    set(QT5_COMPONENTS ${ARGN} CACHE INTERNAL "qt5 components for tests")
 
     foreach (COMP IN LISTS QT5_COMPONENTS_FOR_TEST)
         find_package(QT NAMES Qt5 COMPONENTS ${COMP} REQUIRED)
         find_package(Qt5 COMPONENTS ${COMP} REQUIRED)
     endforeach ()
 endmacro()
-
 macro(link_qt5_for_test)
     foreach (COMP IN LISTS QT5_COMPONENTS_FOR_TEST)
         if (LINK_NAME)
@@ -60,45 +88,6 @@ macro(link_qt5_for_test)
         endif ()
     endforeach ()
 endmacro()
-
-macro(gen_link_name_for_lib)
-    if (CMAKE_HOST_WIN32)
-        set(LINK_NAME "lib${PROJECT_NAME}-${PROJECT_VERSION}")
-    else ()
-        set(LINK_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
-    endif ()
-
-    if (CMAKE_BUILD_TYPE MATCHES "Debug")
-        set(LINK_NAME "${LINK_NAME}-d")
-    endif ()
-
-    set(LIB_FOR_TEST ${LINK_NAME} CACHE INTERNAL "lib for test")
-endmacro()
-
-macro(gen_link_name_for_app)
-    if (CMAKE_BUILD_TYPE MATCHES "Debug")
-        set(LINK_NAME "${PROJECT_NAME}-d")
-    else ()
-        set(LINK_NAME "${PROJECT_NAME}")
-    endif ()
-endmacro()
-
-macro(gen_link_name_for_test)
-    if (CMAKE_BUILD_TYPE MATCHES "Debug")
-        set(LINK_NAME_FOR_TEST "${PROJECT_NAME}-d")
-    else ()
-        set(LINK_NAME_FOR_TEST "${PROJECT_NAME}")
-    endif ()
-
-    set(EXECUTABLE_OUTPUT_PATH ${${PROJECT_NAME}_BINARY_DIR}/../)
-endmacro()
-
-// todo: include_thirdparty_lib
-// todo: link_thirdparty_lib
-// todo: use_cbb
-// todo: link_cbb
-// todo: link_cbb_for_test
-// todo: link_lib_for_test
 
 macro(link_lib_for_test)
     if (LIB_FOR_TEST)
@@ -111,6 +100,13 @@ macro(link_lib_for_test)
         endif ()
     endif ()
 endmacro()
+
+// todo: include_thirdparty_lib
+// todo: link_thirdparty_lib
+// todo: use_cbb
+// todo: link_cbb
+// todo: link_cbb_for_test
+// todo: link_lib_for_test
 
 macro(build_with_windows_subsystem)
     if (WIN32)
