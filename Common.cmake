@@ -72,7 +72,7 @@ macro(use_qt5_for_test)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTORCC ON)
 
-    set(QT5_COMPONENTS ${ARGN} CACHE INTERNAL "qt5 components for tests")
+    set(QT5_COMPONENTS_FOR_TEST ${ARGN} CACHE INTERNAL "qt5 components for tests")
 
     foreach (COMP IN LISTS QT5_COMPONENTS_FOR_TEST)
         find_package(QT NAMES Qt5 COMPONENTS ${COMP} REQUIRED)
@@ -81,7 +81,7 @@ macro(use_qt5_for_test)
 endmacro()
 macro(link_qt5_for_test)
     foreach (COMP IN LISTS QT5_COMPONENTS_FOR_TEST)
-        if (LINK_NAME)
+        if (LINK_NAME_FOR_TEST)
             target_link_libraries(${LINK_NAME_FOR_TEST} PRIVATE Qt5::${COMP})
         else ()
             target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::${COMP})
@@ -101,12 +101,12 @@ macro(link_lib_for_test)
     endif ()
 endmacro()
 
-// todo: include_thirdparty_lib
-// todo: link_thirdparty_lib
-// todo: use_cbb
-// todo: link_cbb
-// todo: link_cbb_for_test
-// todo: link_lib_for_test
+# todo: include_thirdparty_lib
+# todo: link_thirdparty_lib
+# todo: use_cbb
+# todo: link_cbb
+# todo: link_cbb_for_test
+# todo: link_lib_for_test
 
 macro(build_with_windows_subsystem)
     if (WIN32)
