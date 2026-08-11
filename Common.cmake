@@ -101,13 +101,6 @@ macro(link_lib_for_test)
     endif ()
 endmacro()
 
-# todo: include_thirdparty_lib
-# todo: link_thirdparty_lib
-# todo: use_cbb
-# todo: link_cbb
-# todo: link_cbb_for_test
-# todo: link_lib_for_test
-
 macro(include_thirdparty_lib thirdparty_lib_name)
     include_directories(thirdparty/${thirdparty_lib_name}/include)
 endmacro()
@@ -300,18 +293,6 @@ macro(link_cbb_for_test cbb_name cbb_version)
                 $<${PROJECT_NAME}_BINARY_DIR>)
         endif()
     endif()
-endmacro()
-
-macro(link_lib_for_test)
-    if (LIB_FOR_TEST)
-        if (LINK_NAME_FOR_TEST)
-            if (CMAKE_HOST_WIN32)
-                target_link_libraries(${LINK_NAME_FOR_TEST} PRIVATE ${LIB_FOR_TEST})
-            elseif(CMAKE_HOST_UNIX)
-                target_link_libraries(${LINK_NAME_FOR_TEST} PRIVATE ${LIB_FOR_TEST})
-            endif()
-        endif()
-    endif ()
 endmacro()
 
 macro(build_with_windows_subsystem)
